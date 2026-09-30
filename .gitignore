@@ -1,0 +1,44 @@
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Secrets (Groq API key, DB URLs, etc.)
+.env
+.env.*
+!.env.example
+
+# Real financial data: kabhi commit mat karna
+data/sample/*
+!data/sample/.gitkeep
+data/uploads/
+*.pdf
+*.csv
+*.xlsx
+*.xls
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Build / packaging
+build/
+dist/
+*.egg-info/
