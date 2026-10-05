@@ -1,31 +1,21 @@
 import pandas as pd
 from app.parsers.base import Transaction
 
-
 def to_df(txs: list[Transaction]) -> pd.DataFrame:
     df = pd.DataFrame([t.model_dump() for t in txs])
-    df["date"] = pd.to_datetime(df["date"])
-    df["month"] = df["date"].dt.to_period("M").astype(str)
+    df["data"]= pd.to_datetime(df["date"])
+    df["month"]= pd["date"].dt.to_period("M").astype(str)
     return df
 
 
 def spending_summary(txs: list[Transaction]) -> dict:
-    """Self transfers are ignored (money just moved between own accounts)."""
     df = to_df(txs)
-    df = df[df["kind"] != "self_transfer"].copy()
-    df["category"] = df["category"].fillna("Uncategorized")
-
     debits = df[df["direction"] == "debit"]
-    credits = df[df["direction"] == "credit"]
-    total_spent = float(debits["amount"].sum())
-
     by_cat = debits.groupby("category")["amount"].sum().sort_values(ascending=False)
     monthly = debits.pivot_table(index="category", columns="month",
                                  values="amount", aggfunc="sum", fill_value=0)
     return {
-        "total_spent": round(total_spent, 2),
-        "total_received": round(float(credits["amount"].sum()), 2),
+        "total_spent": round(float(debits["amount"].sum()), 2),
         "by_category": by_cat.round(2).to_dict(),
-        "by_category_pct": (by_cat / total_spent * 100).round(1).to_dict() if total_spent else {},
         "monthly_by_category": monthly.round(2).to_dict("index"),
     }

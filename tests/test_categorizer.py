@@ -13,4 +13,3 @@ def test_rules_categorize_known_merchants():
     done, pending = categorize(txs)
     assert done[0].category == "Food Delivery"
     assert len(pending) == 1
-    
